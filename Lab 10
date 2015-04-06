@@ -1,0 +1,54 @@
+#include<stdio.h>
+
+int main()
+
+{
+    
+    int b_t[20],p[20],w_t[20],t_t[20],i,j,n,total=0,pos,temp;
+    
+    printf("Enter number of process:");
+    scanf("%d",&n);
+    printf("\nEnter Burst Time:\n");
+    for(i=0;i<n;i++)
+    {
+        printf("P%d:",i+1);
+        scanf("%d",&b_t[i]);
+        p[i]=i+1;
+    }
+    
+    //sorting burst time in ascending order 
+    for(i=0;i<n;i++)
+    {
+        pos=i;
+        for(j=i+1;j<n;j++)
+        {
+            if(b_t[j]<b_t[pos])
+                pos=j;
+        }        
+        temp=b_t[i];
+        b_t[i]=b_t[pos];
+        b_t[pos]=temp;
+        temp=p[i];
+        p[i]=p[pos];
+        p[pos]=temp;
+    }
+    
+    w_t[0]=0;            
+    //calculate waiting time
+    for(i=1;i<n;i++)
+    {
+        w_t[i]=0;
+        for(j=0;j<i;j++)
+            w_t[i]+=b_t[j];
+        total+=w_t[i];
+    }
+    total=0;
+    printf("\nProcess\tBurst Time\tWaiting Time\tTurnaround Time");
+    for(i=0;i<n;i++)
+    {
+        t_t[i]=b_t[i]+w_t[i];     //calculate turnaround time
+        total+=t_t[i];
+        printf("\nP%d\t\t\t%d\t\t\t%d\t\t\t\t%d",p[i],b_t[i],w_t[i],t_t[i]);
+    }
+    
+    }
