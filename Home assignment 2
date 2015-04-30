@@ -1,0 +1,133 @@
+1. Events that can cause the above transitions
+•	READY->RUN
+•	If a process is allocated the CPU by a dispatcher.
+•	READY->NONRSIDENT
+•	If memory is over committed and a process is temporarily swapped out of the memory
+•	RUN->READY
+•	Caused by Thin Quantum expiration
+•	RUN->BLOCKED
+•	If a process issues on I/O and other kernel requests.
+•	BLOCKED->READY
+•	If the awaited event 
+•	BLOCKED->NONRESIDENT  
+•	Same as ready to non-resident
+
+2. 
+For time 22		
+P1: Blocked for I/O.
+P3: Blocked for I/O.
+P5: Ready/Running.
+P7: Blocked for I/O.
+P8: Ready/Running.
+
+For time 37
+P1: Ready/Running.
+P3: Ready/Running.
+P5: Blocked/Suspended.
+P7: Blocked for I/O.
+P8: Ready/Running.
+
+For time 47
+P1: Ready/Running.
+P3: Ready/Running.
+P5: Ready/Suspended.
+P7: Blocked for I/O.
+P8: Exits.
+
+
+3. On success, the pid of the child process is returned in the parent’s thread of execution, and a ‘0’ is returned in the child process’s thread of execution.
+
+0
+<child pid>
+       OR
+<child pid>
+0
+
+
+
+
+
+4. Mode switch between threads may be cheaper than a mode switch between processes because,
+•	The switching process requires the Operating System to process more information.
+•	Memory is shared by threads so thereby there is no need to exchange memory during the thread execution or switching.
+•	Thread switching does not require the kernel to get involved which saves the time for switching from the user to the kernel mode.
+
+5. Disadvantages of ULTs over KLTs.
+•	Thread switching does not require kernel mode privileges because all the thread management data structure are stored within the user address space of a single process. This saves the overhead of the mode switches  (from user to kernel and vice-versa).
+•	Scheduling can also be application specific. The algorithm for scheduling can be tailored to the application without disturbing the underlying OS schedules.
+•	ULTs can run on any Operating system without making any changes to the underlying kernel to support the ULTs. The thread library is a set of the application level functions shared by all the applications.
+6. Disadvantages of ULTs compared to KLTs. 
+
+•	In a typical Operating system, many system calls are blocking when a ULT executes a system call. Not only the particular thread is blocked but also the threads along with that in the process are also blocked.
+•	In a pure ULT strategy, a multi-threaded application can’t take advantage multiprocessing, a kernel assigns one process to only one processor, and therefore only a single thread within a process can be executed at a time. 
+
+7. ULT thread structure of a process is not visible to the OS/kernel which schedules on the basis of the process. The kernel continues to schedule the process as a unit and assigns execution state (Ready, Running, Blocked) to that process. Hence, once a thread is blocked the entire process is blocked and consequently all the threads in that process ae also blocked.
+
+8. One to one mapping between the ULT and KLT allows on or more threads within the process to issue blocking system call while continue to run, because KLT in multi-threaded program enables at least on thread to issue a blocking system call independently without the influence of other threads and thereby allowing other threads to uninterruptly continue with their execution, however in single threaded system counter parts of the multi-threaded program machine generally spends a lot of time waiting for the I/O operations.
+
+9. If a process exits and there are still threads of that process running, they will not continue to run. Because all the threads share the same address space, all the threads are suspended at the same time, similarly the termination of a process terminates all the threads within that process.
+
+10. Distinction between competing and co-operating processing.
+Competing process competes for resources whereas the co-operating process shares the resources. 
+
+11. Difference between strong and weak semaphores is that the strong semaphores specifies in which order the processes are being removed from the waiting queue whereas the weak semaphores don’t. For example in FIFO.
+
+12. A monitor is a synchronization construct which allows the threads to have mutual exclusion. It provides equivalent functionality as that of the semaphores and are easier to control.
+
+13. Distinction between blocking and non-blocking with respect to messages.
+•	Blocking send, Blocking receive: Both the sender and the receiver are blocked until the message is delivered.
+•	Non-Blocking send, Blocking receive: The sender may continue, the receiver is blocked until the requested message arrives. This allows the process to send either one or more messages to variety of destination as quickly as possible. 
+•	Non-Blocking send, Non-blocking receive: Neither the sender nor the receiver is required to wait. s
+
+14. Busy waiting can be more efficient if the expected wait time is shorter than the time is shorter than the time it takes to pre-empt and reschedule a thread. This is common for multiprocessors. 
+
+15. Both are equivalent in terms of functionality. 
+s.count is for the number of process that can run simultaneously. When it turns to 0 it implies every upcoming process which invoked semwait() should be blocked.
+
+
+16. 
+
+Loop
+{
+semwait(santa);
+
+if(all_reindeer_ready)
+{
+	for all_waiting_reindeer
+{
+		semSignal(reindeer_wait);
+}
+
+for all_ reindeer
+{
+	semSignal(harness) ;
+}
+
+Deliver Tops;
+
+for all_reindeer
+{
+	semSignal(unharness);
+}
+}
+
+Else if(all_elves_ready)
+{
+	for all_waiting_elves
+{
+		semSignal(elf_wait);
+}
+
+for all_ reindeer
+{
+	semSignal(invite) ;
+}
+
+consult;
+
+for all_reindeer
+{
+	semSignal(unharness);
+}
+}
+}
