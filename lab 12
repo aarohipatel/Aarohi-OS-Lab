@@ -1,0 +1,72 @@
+#include<stdio.h>
+
+int main()
+{
+	int tot_proc,i,j,k,tot_time,total,time,flag;
+	tot_time=0,flag=0;
+	printf("\nEnter the number of process	 ");
+	scanf("%d",&tot_proc);
+	
+	int proc[tot_proc][3];
+	for(i=0;i<tot_proc;i++)
+	{
+		printf("\nEnter Release time for %d process	",i+1);
+		scanf("%d",&proc[0][i]);
+		printf("\nEnter Deadline for %d process	",i+1);
+		scanf("%d",&proc[1][i]);
+		printf("\nEnter Execution time for %d process	",i+1);
+		scanf("%d",&proc[2][i]);
+		tot_time=tot_time+proc[2][i];
+	}	
+	
+	int a[tot_proc][tot_time];
+	for(i=0;i<tot_proc;i++)
+	{
+		for(j=0;j<tot_time;j++)
+		{
+			a[i][j]=0;
+		}	
+	}
+	k = proc[1][0]-proc[2][0];
+	j=0;
+	for(time=0;time<tot_time;time++)
+	{
+		
+		for(i=0;i<tot_proc;i++)
+		{
+			if(proc[0][i]<=time && proc[2][i]!=0)
+			{
+				if(flag==1)
+				{
+					k = proc[1][i]-proc[2][i]-time;
+					flag = 0;
+					j=i;
+				}
+				if(proc[1][i]-proc[2][i]-time<k)
+				{
+					k = proc[1][i]-proc[2][i]-time;
+					j=i;
+				}				
+			}
+			else if(proc[0][i]>time)
+			break;
+		}
+		
+		proc[2][j] = proc[2][j] - 1;
+		a[j][time]=1;
+		if(proc[2][j]==0)
+		{
+			flag=1;
+		}			
+	}
+	
+for(i=0;i<tot_proc;i++)
+	{
+		for(j=0;j<tot_time;j++)
+		{
+			printf("%d",a[i][j]);
+		}
+		printf("\n");	
+	}
+	return 0;			
+}
